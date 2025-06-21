@@ -11,9 +11,6 @@ int main()
 	int max = 1; //maximo de palos que se pueden dibujar
 	//tamaño de la pantalla
 	Console::SetWindowSize(150, 49);
-	//mapa 2
-	Console::Clear();
-	crear_mapa2();
 
 	//actualizacion  06/06 21:55
 	srand(time(nullptr));
