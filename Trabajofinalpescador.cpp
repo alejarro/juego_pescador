@@ -18,19 +18,20 @@ int main()
 	_sleep(4000);
 	//instrucciones	1
 	Console::Clear();
+	instrucciones(40, 2);
 	ventana_instrucciones1(20, 10);
-	_sleep(4000);
+	_getch();
 	//instrucciones	2
 	Console::Clear();
 	ventana_instrucciones2(20, 10);
-	_sleep(4000);
+	_getch();
 	//mapa 1
 	Console::Clear();
 	crear_mapa1();
 	_sleep(4000);
 	//cargando 1
 	Console::Clear();
-	cargando2(40, 2);
+	cargando(40, 2);
 	cargando1(45, 10);
 	_sleep(4000);
 	//mapa 2
@@ -39,7 +40,7 @@ int main()
 	_sleep(4000);
 	//cargando 2	
 	Console::Clear();
-	cargando2(40, 2);
+	cargando(40, 2);
 	dibujo_de_carga(45, 10);
 	noticia2(30, 40);
 	_sleep(4000);
@@ -47,18 +48,18 @@ int main()
 	Console::Clear();
 	crear_mapa3();	
 	_sleep(4000);
-	//cargando3
 	Console::Clear();
-	cargando2(40, 2);
+	cargando(40, 2);
 	ventana_cargando3(45, 10);
+	noticia3(0,10);
 	_sleep(4000);
 	//ganaste
 	Console::Clear();
-	ventana_youwin(20, 20);
+	ventana_youwin(45, 5);
 	_sleep(4000);
 	//perdiste
 	Console::Clear();
-	ventana_youlose(20, 20);
+	ventana_youlose(45, 5);
 	_sleep(4000);
 	//creadores
 	Console::Clear();
