@@ -4,12 +4,12 @@
 
 //MAIN
 int main()
-{//tamaño de la pantalla
+{//tama�o de la pantalla
 	int d;
 	//Coordenadas del personaje
 	int xp = 35, yp = 6;
 	int max = 1; //maximo de palos que se pueden dibujar
-	//tamaño de la pantalla
+	//tama�o de la pantalla
 	Console::SetWindowSize(150, 48);
 	//presentacion
 	nombre_juego(25, 2);
