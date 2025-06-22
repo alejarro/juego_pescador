@@ -1,6 +1,7 @@
 #pragma once
 #include "iostream"
 #include "conio.h"
+#include "windows.h"
 
 #define FILAS 40
 #define COLUMNAS 150
@@ -401,16 +402,19 @@ void colores_logo(int x, int y)
 	//Barco del personaje
 	void dibuja_personaje(int x, int y)
 	{
+		Console::BackgroundColor = ConsoleColor::DarkGreen;
 		Console::ForegroundColor = ConsoleColor::DarkGray;
-		cursor(x, y);     cout << "   ,,,       "; Console::ForegroundColor = ConsoleColor::Yellow;
-		cursor(x, y + 1); cout << "  (o o)  |" << "[0]"; Console::ForegroundColor = ConsoleColor::Yellow; //char(16) es el simbolo de la flecha hacia la derecha
+		cursor(x, y);     cout << "   ,,,       "; Console::ForegroundColor = ConsoleColor::Yellow; Console::BackgroundColor = ConsoleColor::DarkCyan;
+		cursor(x, y + 1); cout << "  (0 0)  |" << "[0]"; Console::ForegroundColor = ConsoleColor::Yellow; //char(16) es el simbolo de la flecha hacia la derecha
 		cursor(x, y + 2); cout << "  /   \\  |  "; Console::ForegroundColor = ConsoleColor::DarkRed;
 		cursor(x, y + 3); cout << "-----------"; Console::ForegroundColor = ConsoleColor::DarkRed;
 		cursor(x, y + 4); cout << "\\_________/";
 	}
 	void borra_personaje(int x, int y)
 	{
+		Console::BackgroundColor = ConsoleColor::DarkGreen;
 		cursor(x, y);       cout << "              ";
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
 		cursor(x, y + 1);   cout << "              ";
 		cursor(x, y + 2);   cout << "              ";
 		cursor(x, y + 3);   cout << "              ";
@@ -421,6 +425,7 @@ void colores_logo(int x, int y)
 	//Caña del personaje
 	void dibuja_palo(int x, int y, int max)
 	{
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
 		for (int i = 0; i < max - 1; ++i)
 		{
 			cursor(x, y + i); cout << "|";
@@ -430,14 +435,97 @@ void colores_logo(int x, int y)
 
 	void borra_palo(int x, int y, int max)
 	{
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
 		for (int i = 0; i < max; ++i)
 		{
 			cursor(x, y + i); cout << " ";
 		}
 	}
 
+	//Deteccion de basura
+	char obtenerCaracterEnPosicion(int columna, int fila) {
+    // 1. Obtenemos el manejador (handle) de la consola de salida
+    HANDLE manejadorConsola = GetStdHandle(STD_OUTPUT_HANDLE);
 
+    // 2. Declaramos una variable tipo CHAR que va a almacenar el carácter leído
+    CHAR caracterLeido;
 
+	// 3. Variable que almacenará automaticamente la cantidad de caracteres leídos
+    DWORD cantidadLeida;
+
+	// 4. Posicion en la consola donde queremos leer el carácter(justi cuando llegue la caña)
+    COORD posicion = { columna, fila };
+
+	// 5. Usamos ReadConsoleOutputCharacterA con los parametros para saber si la caña leyo un carácter
+    if (ReadConsoleOutputCharacterA(manejadorConsola, &caracterLeido, 1, posicion, &cantidadLeida)) {
+        return caracterLeido; // Si se leyó correctamente, devolvemos el carácter
+    }
+
+    // 6. Si hubo un error al leer, se devueleve P
+    return 'P';
+}
+
+	//BASURA TIPO1
+	void basura_1( int x, int y, bool colision, bool existencia) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << " * ";
+		cursor(x, y + 1); cout << "***";
+		cursor(x, y + 2); cout << "***";
+		colision = false;
+		existencia = true; 
+	}
+	void borra_basura_1(int x, int y) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << "   ";
+		cursor(x, y + 1); cout << "   ";
+		cursor(x, y + 2); cout << "   ";
+	}
+
+	//BASURA TIPO2
+	void basura_2(int x, int y, bool colision, bool existencia) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << "888";
+		colision = false;
+		existencia = true;
+	}
+	void borra_basura_2(int x, int y) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << "   ";
+	}
+
+	//BASURA TIPO3
+	void basura_3(int x, int y, bool colision, bool existencia) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << "@@@";
+		cursor(x, y+1);   cout << " | ";
+		colision = false;
+		existencia = true;
+	}
+	void borra_basura_3(int x, int y) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << "   ";
+		cursor(x, y+1);   cout << "   ";
+	}
+
+	//BASURA TIPO4
+	void basura_4(int x, int y, bool colision, bool existencia) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << "\\-bat3ria-\\";
+		colision = false;
+		existencia = true;
+	}
+	void borra_basura_4(int x, int y) {
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		Console::ForegroundColor = ConsoleColor::Black;
+		cursor(x, y);     cout << "           ";
+	}
 //CICLO DEL JUEGO, DINAMICA, MECANICAS, ETC
 
 
@@ -446,8 +534,7 @@ void colores_logo(int x, int y)
 //RESULTADOS DE LA PARTIDA
 
 	//Ventana de victoria
-	void ventana_youwin(int x, int y)
-	{
+	void ventana_youwin(int x, int y) {
 		//CONSIDERANDO LAS DIMENSIONES DE LA CONSOLA, X no puede ser mayor a 138 e Y no puede ser mayor a 18
 		cursor(x, y + 1); cout << " ____       ______      __  __      ______      ____        ______    ____       __      ";
 		cursor(x, y + 2); cout << "/\\  _`\\    /\\  _  \\    /\\ \\/\\ \\    /\\  _  \\    /\\  _`\\     /\\__  _\\  /\\  _`\\    /\\ \\     ";
