@@ -30,12 +30,7 @@ void nombre_juego(int x, int y)
 	cursor(x, y + 3); cout << " / /     / _, _/  / ___ | ___/ /  / __  /          / __/     _/ /    ___/ /  / __  /   _/ /    / /|  /  / /_/ /  " << endl;
 	cursor(x, y + 4); cout << "/_/     /_/ |_|  /_/  |_|/____/  /_/ /_/          /_/       /___/   /____/  /_/ /_/   /___/   /_/ |_/   \\____/   " << endl;
 }
-void presentación(int x, int y)
-{
-	cursor(x, y + 0); cout << "1.- Instrucciones" << endl;
-	cursor(x, y + 5); cout << "2.- Nueva Partída" << endl;
-	cursor(x, y + 10); cout << "3.- créditos" << endl;
-}
+
 int logo[FIL][COL] = {
 	{0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -105,16 +100,16 @@ void ventana_instrucciones1(int x, int y)
 {
 	cursor(x, y + 0); cout << "Usa las flechas izquierda y derecha para mover el barco. Puedes soltar tu caña o retraerla con arriba y abajo.";
 	cursor(x, y + 1); cout << "Este eres tu. No dejes que tu vidas lleguen a cero.";
-	cursor(x+50, y + 4); cout << "   ,,,       ";
-	cursor(x+50, y + 5); cout << "  (o o)  |" << "[0]";
-	cursor(x+50, y + 6); cout << "  /   \\  |  ";
-	cursor(x+50, y + 7); cout << "-----------";
-	cursor(x+50, y + 8); cout << "\\_________/";
+	cursor(x + 50, y + 4); cout << "   ,,,       ";
+	cursor(x + 50, y + 5); cout << "  (o o)  |" << "[0]";
+	cursor(x + 50, y + 6); cout << "  /   \\  |  ";
+	cursor(x + 50, y + 7); cout << "-----------";
+	cursor(x + 50, y + 8); cout << "\\_________/";
 	cursor(x, y + 10); cout << "Debes evitar tocar los peces mientras vas recogiendo la basura";
 	cursor(x + 55, y + 11); cout << "<><";
 	cursor(x, y + 13); cout << "Si ves una perla la debes tomar para que te de un aliado que te ayude a recoger la basura.";
 	cursor(x + 50, y + 14); cout << "( \U000000b0)  =  ><_\U000000b0<";
-	cursor(x+50, y + 36); cout << "\t\t\tPresiona cualquier tecla para continuar...";
+	cursor(x + 50, y + 36); cout << "\t\t\tPresiona cualquier tecla para continuar...";
 }
 void ventana_instrucciones2(int x, int y)
 {
@@ -146,7 +141,6 @@ void cargando1(int x, int y) {
 	cursor(x + 19, y + 14); cout << "|  /    / / / / / //   |__\\   ";
 	cursor(x + 19, y + 15); cout << "|/     / / / / / / /          ";
 	_sleep(4000); // Espera 4 segundos antes de continuar
-	cursor(x + 19, y + 18); cout << "CARGADO! Presiona cualquier tecla para continuar !!";
 }
 void cargando(int x, int y)
 {
@@ -612,11 +606,17 @@ void ventana_youlose(int x, int y)
 //FINAL DEL JUEGO
 void ventana_creadores(int x, int y)
 {
-	cursor(x, y + 0); cout << "Creadores del juego:";
-	cursor(x, y + 1); cout << "Victor Abanto Vega";
-	cursor(x, y + 2); cout << "Aracelly Cordova Gutierrez";
-	cursor(x, y + 3); cout << "Silvana Sapallanay Yallico";
-	cursor(x, y + 4); cout << "Presiona cualquier tecla para continuar...";
+	cursor(x + 10, y + 0); cout << "                            __                         ";
+	cursor(x + 10, y + 1); cout << "  _____________  ____ _____/ /___  ________  _____   _ ";
+	cursor(x + 10, y + 2); cout << " / ___/ ___/ _ \\/ __ `/ __  / __ \\/ ___/ _ \\/ ___/  (_)";
+	cursor(x + 10, y + 3); cout << "/ /__/ /  /  __/ /_/ / /_/ / /_/ / /  /  __(__  )  _   ";
+	cursor(x + 10, y + 4); cout << "\\___/_/   \\___/\\__,_/\\__,_/\\____/_/   \\___/____/  (_)  ";
+
+	cursor(x, y + 10); cout << "Victor Abanto Vega";
+	cursor(x, y + 15); cout << "Aracelly Cordova Gutierrez";
+	cursor(x, y + 20); cout << "Silvana Sapallanay Yallico";
+	cursor(x, y + 25); cout << "Presiona cualquier tecla para continuar...";
+	//_ getch(); // Espera a que el usuario presione una tecla
 }
 
 void ventana_cargando3(int x, int y)
@@ -656,5 +656,50 @@ void ventana_cargando3(int x, int y)
 void noticia3(int x, int y)
 {
 	cursor(x, y + 35); cout << "El derrame de 12.000 barriles de petróleo del 15 de enero de 2022 sigue causando daños ambientales. Según CooperAcción y Oxfam, solo se recuperó el 40 % del crudo, mientras que el 60 % permanece en el ecosistema, en zonas inaccesibles o disperso en el mar y el fondo marino.";
+}
+
+int presentación(int x, int y)
+{
+	int opcion = 0;         ///// Variable para almacenar la opción seleccionada
+	do
+	{
+		//// Limpia la pantalla
+		cursor(x, y + 0); cout << "1.- Instrucciones" << endl;
+		cursor(x, y + 5); cout << "2.- Nueva Partída" << endl;
+		cursor(x, y + 10); cout << "3.- Créditos" << endl;
+		cursor(x, y + 15); cout << "Seleccione una opción (1-3) y presione Enter: ";
+		cin >> opcion;
+
+		switch (opcion) {
+		case 1:
+			Console::Clear();   //// Limpia la pantalla
+			ventana_instrucciones1(2, 2);
+			_sleep(5000);
+			Console::Clear();
+			ventana_instrucciones2(2, 2);
+			break;
+		case 2:
+			Console::Clear();
+			cargando(40, 2);
+			cargando1(45, 10);
+			Console::Clear();
+			crear_mapa1();
+			cursor(2, FILAS + 2); cout << "Presione Enter para volver al menú...";
+
+			break;
+		case 3:
+			Console::Clear();
+			ventana_creadores(2, 2);
+			cursor(2, 8); cout << "Presione Enter para volver al menú...";
+
+			break;
+		default:
+			cursor(x, y + 17); cout << "Opción no válida. Intente de nuevo.";
+			_sleep(1000);
+			break;
+		}
+	} while (opcion < 1 || opcion > 3);
+
+	return opcion;
 }
 
