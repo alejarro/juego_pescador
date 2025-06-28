@@ -703,3 +703,123 @@ int presentación(int x, int y)
 	return opcion;
 }
 
+struct Basura {
+	int x; 
+	int y;
+	bool paloDetectado = false;
+	bool existe = true;
+	int tick = 0;
+	int tipo = 0;
+	int contador = 0;
+};
+
+void dibujar_basura(Basura b) {
+
+	if (b.tipo == 1) {
+		cursor(b.x, b.y); cout << "*";
+	}
+	else if (b.tipo == 2) {
+		cursor(b.x, b.y);     cout << " * ";
+		cursor(b.x, b.y + 1); cout << "***";
+		cursor(b.x, b.y + 2); cout << "***";
+	}
+	else if (b.tipo == 3) {
+		cursor(b.x, b.y+0); cout << "@@@@@";
+		cursor(b.x, b.y+1); cout << "@[P]@";
+		cursor(b.x, b.y+2); cout << "@@@@@";
+	}
+	else if (b.tipo == 4) {
+		cursor(b.x, b.y); cout << "888";
+	}
+}
+
+void borrar_basura(Basura b) {
+
+	if (b.tipo == 1) {
+		cursor(b.x, b.y); cout << " ";
+	}
+	else if (b.tipo == 2) {
+		cursor(b.x, b.y);     cout << "   ";
+		cursor(b.x, b.y + 1); cout << "   ";
+		cursor(b.x, b.y + 2); cout << "   ";
+	}
+	else if (b.tipo == 3) {
+		cursor(b.x, b.y + 0); cout << "     ";
+		cursor(b.x, b.y + 1); cout << "     ";
+		cursor(b.x, b.y + 2); cout << "     ";
+	}
+	else if (b.tipo == 4) {
+		cursor(b.x, b.y); cout << "   ";
+	}
+}
+
+
+void jugar_nivel2() {
+	//Coordenadas del personaje
+	int xp = 35, yp = 6;
+	int max = 1; //maximo de palos que se pueden dibujar
+
+	Console::Clear();
+	crear_mapa2();
+	_sleep(2000);
+	int puntaje = 0;
+
+	int tick_basura = 1000;
+
+	// Crear basuras
+	Basura basuras[] = {
+		{20, 8, false, true, 10, 1,0}, // Basura 1 de tipo 1
+		{20, 30, false, true, 10, 2,0}, // Basura 2 de tipo 2
+		{30, 15, false, true, 10, 3,0}, // Basura 3 de tipo 3
+		{40, 20, false, true, 10, 4,0}  // Basura 4 de tipo 4
+	};
+	// Dibujar todas las basuras
+
+	for (int i = 0; i < 4; i++) {
+		dibujar_basura(basuras[i]);
+	}
+
+	while (true) {
+		//PARA CADA BASURA
+		for (int i = 0; i < 4; i++) {
+			basuras[i].tick++;
+			//SE AUMENTA EL TICK PARA COMPROBAR SI SE PUEDE DETECTAR UN PALO
+			if (basuras[i].tick >= tick_basura && basuras[i].paloDetectado == false && basuras[i].existe == true) {
+				//SI EL TICK ES MAYOR O IGUAL AL TICK DE BASURA, SE COMPRUEBA SI HAY UN PALO
+				char hay_palo = obtenerCaracterEnPosicion(basuras[i].x, basuras[i].y);
+				if (hay_palo == '|'|| hay_palo=='J') {
+					//SI HAY UN PALO, SE DESACTIVA ESA BASURA
+					puntaje = puntaje + 1;
+					basuras[i].paloDetectado == true; // Desactiva futuras ejecuciones PONIENDO L BOOLEANO EN TRUE PORQUE YA SE DETECTÓ UN PALO
+					cursor(10, 1); cout << "Puntaje: " << puntaje;
+					basuras[i].existe = false; // Desactiva la basura
+					borrar_basura(basuras[i]); // Borra la basura de la pantalla
+				}
+			}
+		}
+		if (kbhit()) {
+				borra_personaje(xp, yp);
+				borra_palo(xp + 6, yp + 5, max);
+				char tecla = getch();
+				if (tecla == DERECHA && xp != 135) { xp++; }
+				if (tecla == IZQUIERDA && xp != 1) { xp--; }
+				if (tecla == ABAJO && max < 32) { max++; }
+				if (tecla == ARRIBA && max > 1) { max--; }
+
+				char basura_en_palo = obtenerCaracterEnPosicion(xp + 6, yp + 5 + max - 1);
+
+				dibuja_personaje(xp, yp);
+				dibuja_palo(xp + 6, yp + 5, max);
+				_sleep(1);
+			}
+		if (puntaje == 4) {
+				_sleep(3000);
+				break;
+			}
+	}
+	// Mostrar mensaje de victoria
+	Console::Clear();
+	ventana_youwin(20, 3);
+	_sleep(4000);
+}
+//HOLA
