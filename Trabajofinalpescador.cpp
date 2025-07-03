@@ -12,19 +12,13 @@ int main()
 	presentación(5, 20);
 	_sleep(4000);
 
-
-	//mapa 1
-	_sleep(3000);
-	Console::Clear();
-	crear_mapa1();
-	_sleep(2000);
-
 	//cargando 2	
 	Console::Clear();
 	cargando(40, 2);
 	dibujo_de_carga(45, 10);
 	noticia2(30, 40);
 	_sleep(4000);
+
 	jugar_nivel2();
 
 
@@ -33,10 +27,8 @@ int main()
 	ventana_cargando3(45, 10);
 	noticia3(0, 10);
 	_sleep(4000);
-	//mapa 3
-	Console::Clear();
-	crear_mapa3();
-	_sleep(4000);
+
+	jugar_nivel3();
 
 	//ganaste
 	Console::Clear();
