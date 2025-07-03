@@ -2,6 +2,8 @@
 #include "iostream"
 #include "conio.h"
 #include "windows.h"
+#include "vector"
+#include "ctime"
 
 #define FILAS 40
 #define COLUMNAS 150
@@ -90,8 +92,8 @@ void colores_logo(int x, int y)
 //INSTRUCCIONES
 void instrucciones(int x, int y)
 {
-	cursor(x, y + 0); cout << "    _____   _________________  __  ______________________  _   _____________ " << endl;
-	cursor(x, y + 1); cout << "   /  _/ | / / ___/_  __/ __ \\/ / / / ____/ ____/ _ / __ \\/ | / / ____ / ___/" << endl;
+	cursor(x, y + 0); cout << "    _____   _________________  __  ______________________  _   _____________ ";
+	cursor(x, y + 1); cout << "   /  _/ | / / ___/_  __/ __ \\/ / / / ____/ ____/ _ / __ \\/ | / / ____ / ___/";
 	cursor(x, y + 2); cout << "   / //  |/ /\\__ \\ / / / /_/ / / / / /   / /    / // / / /  |/ / __/  \\__ \\  ";
 	cursor(x, y + 3); cout << " _/ // /|  /___/ // / / _, _/ /_/ / /___/ /____/ // /_/ / /|  / /___ ___/ /  ";
 	cursor(x, y + 4); cout << "/___/_/ |_//____//_/ /_/ |_|\\____/\\____/\\____/___/\\____/_/ |_/_____//____/   ";
@@ -114,17 +116,17 @@ void ventana_instrucciones1(int x, int y)
 void ventana_instrucciones2(int x, int y)
 {
 	//CONSIDERANDO LAS DIMENSIONES DE LA CONSOLA, X no puede ser mayor a 150 e Y no puede ser mayor a 23
-	cursor(x, y); cout << "Si ves un corazón, péscalo para ganar una vida extra    ";
-	cursor(x, y + 2); cout << "                            ++                          ";
-	cursor(x, y + 4); cout << "Si ves un reloj de arena, péscalo para ganar más  tiempo";
-	cursor(x, y + 6); cout << "                            00                          ";
+	cursor(x, y); cout << "Si ves un corazon, pescalo para ganar una vida extra    ";
+	cursor(x, y + 2); cout << "                            [+]                          ";
+	cursor(x, y + 4); cout << "Si ves un reloj de arena, pescalo para ganar mas  tiempo";
+	cursor(x, y + 6); cout << "                            [$]                          ";
 	cursor(x, y + 8); cout << "Ganas cuando hayas recogido toda la basura, aun conserves";
 	cursor(x, y + 9); cout << "vidas y tiempo. Si te quedas sin vidas o tiempo, pierdes.  ";
 	cursor(x, y + 12); cout << "La vida marina te lo agradecera!";
 	cursor(x, y + 15); cout << "  _";
 	cursor(x, y + 16); cout << "><_0>	'Gracias!!' ";
 	cursor(x, y + 18); cout << "				'Ahora puedo nadar tranquilo'	<0>< ";
-	cursor(2, y + 27); cout << "No dejes que la contaminación.                                                El cambio comienza contigo. Presiona espacio para volver al título.";
+	
 }
 //PANTALLAS DE CARGA
 
@@ -132,9 +134,9 @@ void ventana_instrucciones2(int x, int y)
 void cargando1(int x, int y) {
 	//Texto informativo de la pantalla de carga 1
 	cursor(x, y); cout << "Sabias que ...																					  ";
-	cursor(x, y + 3); cout << "Estudios revelan que el río Mantaro está gravemente contaminado por la actividad minera, con     ";
-	cursor(x, y + 4); cout << "niveles de cobre y cadmio 4 veces superiores a lo permitido, plomo 13 veces más, hierro más de 30";
-	cursor(x, y + 5); cout << "veces y, en algunas épocas, hasta 160 veces por encima del límite.                               ";
+	cursor(x, y + 3); cout << "Estudios revelan que el rio Mantaro esta gravemente contaminado por la actividad minera, con     ";
+	cursor(x, y + 4); cout << "niveles de cobre y cadmio 4 veces superiores a lo permitido, plomo 13 veces mas, hierro mas de 30";
+	cursor(x, y + 5); cout << "veces y, en algunas epocas, hasta 160 veces por encima del limite.                               ";
 	cursor(x + 19, y + 11); cout << "|\\    \\ \\ \\ \\ \\ \\ \\     __    ";
 	cursor(x + 19, y + 12); cout << "|  \\    \\ \\ \\ \\ \\ \\\\   | X~-_ ";
 	cursor(x + 19, y + 13); cout << "|   >----|-|-|-|-|--|--|  __/|";
@@ -386,6 +388,95 @@ void crear_mapa3() {
 }
 
 
+
+
+struct Pez {
+	int fila;
+	int columna;
+	int tipo; 
+	int frame; 
+};
+
+// Función para animar peces en un mapa
+void animar_peces(int mapa[FILAS][COLUMNAS]) {
+	static std::vector<Pez> peces;
+	static bool inicializado = false;       //const int m=9;
+	int num_peces = 7; // Número de peces simultáneos
+
+	if (!inicializado) {
+		srand((unsigned)time(0));
+		peces.clear();
+		for (int i = 0; i < num_peces; ++i) {
+			int fila = 5 + rand() % (FILAS - 10);
+			while (mapa[fila][0] != 1) {
+				fila = 5 + rand() % (FILAS - 10);
+			}
+			Pez p;
+			p.fila = fila;
+			p.columna = rand() % (COLUMNAS - 3);
+			p.tipo = 1;       // ><>         <><
+			p.frame = 0;
+			peces.push_back(p);
+		}
+		inicializado = true;
+	}
+
+	for (auto& pez : peces) {
+		// Borrar pez en la posición anterior
+		if (pez.tipo == 1) { 
+			if (pez.columna - 1 >= 0 && pez.columna - 1 < COLUMNAS && mapa[pez.fila][pez.columna - 1] == 1) {
+				cursor(pez.columna - 1, pez.fila);
+				Console::ForegroundColor = ConsoleColor::DarkCyan;
+				Console::BackgroundColor = ConsoleColor::DarkCyan;
+				cout << "   ";
+				Console::BackgroundColor = ConsoleColor::Black;
+			}
+		}
+		else { 
+			if (pez.columna + 2 < COLUMNAS && pez.columna + 2 >= 0 && mapa[pez.fila][pez.columna + 2] == 1) {
+				cursor(pez.columna + 2, pez.fila);
+				Console::ForegroundColor = ConsoleColor::DarkCyan;
+				Console::BackgroundColor = ConsoleColor::DarkCyan;
+				cout << "   ";
+				Console::BackgroundColor = ConsoleColor::Black;
+			}
+		}
+
+		// Dibujar pez en la nueva posición
+		if (pez.columna >= 0 && pez.columna < COLUMNAS - 2 && mapa[pez.fila][pez.columna] == 1) {
+			cursor(pez.columna, pez.fila);
+			Console::ForegroundColor = ConsoleColor::Black;
+			Console::BackgroundColor = ConsoleColor::DarkCyan;
+			if (pez.tipo == 1) {
+				cout << "><>";
+			}
+			else {
+				cout << "<><";
+			}
+			Console::BackgroundColor = ConsoleColor::Black;
+		}
+
+		// Actualizar posición y dirección
+		if (pez.tipo == 1) { 
+			pez.columna++;
+			if (pez.columna > COLUMNAS - 3) {
+				pez.columna = COLUMNAS - 3;
+				pez.tipo = 0; 
+			}
+		}
+		else { 
+			pez.columna--;
+			if (pez.columna < 0) {
+				pez.columna = 0;
+				pez.tipo = 1; 
+			}
+		}
+		pez.frame++;
+	}
+	_sleep(80);
+}
+
+
 //FUNCIONES DEL TABLERO/PROGRESO/DATOS DEL NIVEL
 
 void ventana_progreso()
@@ -452,7 +543,7 @@ char obtenerCaracterEnPosicion(int columna, int fila) {
 	// 3. Variable que almacenará automaticamente la cantidad de caracteres leídos
 	DWORD cantidadLeida;
 
-	// 4. Posicion en la consola donde queremos leer el carácter(justi cuando llegue la caña)
+	// 4. Posicion en la consola donde queremos leer el carácter(justo cuando llegue la caña)
 	COORD posicion = { columna, fila };
 
 	// 5. Usamos ReadConsoleOutputCharacterA con los parametros para saber si la caña leyo un carácter
@@ -463,71 +554,6 @@ char obtenerCaracterEnPosicion(int columna, int fila) {
 	// 6. Si hubo un error al leer, se devueleve P
 	return 'P';
 }
-
-//BASURA TIPO1
-void basura_1(int x, int y, bool colision, bool existencia) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << " * ";
-	cursor(x, y + 1); cout << "***";
-	cursor(x, y + 2); cout << "***";
-	colision = false;
-	existencia = true;
-}
-void borra_basura_1(int x, int y) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << "   ";
-	cursor(x, y + 1); cout << "   ";
-	cursor(x, y + 2); cout << "   ";
-}
-
-//BASURA TIPO2
-void basura_2(int x, int y, bool colision, bool existencia) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << "888";
-	colision = false;
-	existencia = true;
-}
-void borra_basura_2(int x, int y) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << "   ";
-}
-
-//BASURA TIPO3
-void basura_3(int x, int y, bool colision, bool existencia) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << "@@@";
-	cursor(x, y + 1);   cout << " | ";
-	colision = false;
-	existencia = true;
-}
-void borra_basura_3(int x, int y) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << "   ";
-	cursor(x, y + 1);   cout << "   ";
-}
-
-//BASURA TIPO4
-void basura_4(int x, int y, bool colision, bool existencia) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << "\\-bat3ria-\\";
-	colision = false;
-	existencia = true;
-}
-void borra_basura_4(int x, int y) {
-	Console::BackgroundColor = ConsoleColor::DarkCyan;
-	Console::ForegroundColor = ConsoleColor::Black;
-	cursor(x, y);     cout << "           ";
-}
-//CICLO DEL JUEGO, DINAMICA, MECANICAS, ETC
-
-
 
 
 //RESULTADOS DE LA PARTIDA
@@ -673,25 +699,29 @@ int presentación(int x, int y)
 		switch (opcion) {
 		case 1:
 			Console::Clear();   //// Limpia la pantalla
-			ventana_instrucciones1(2, 2);
+			instrucciones(25, 2);
+			ventana_instrucciones1(25, 10);
 			_sleep(5000);
 			Console::Clear();
-			ventana_instrucciones2(2, 2);
+			ventana_instrucciones2(25, 2);
+			_sleep(4000);
 			break;
 		case 2:
 			Console::Clear();
-			cargando(40, 2);
+			cargando(40, 5);
 			cargando1(45, 10);
 			Console::Clear();
 			crear_mapa1();
+			for (int i = 0; i < 550; ++i) { 
+				animar_peces(mapa1);
+				if (kbhit()) break; 
+			}
 			cursor(2, FILAS + 2); cout << "Presione Enter para volver al menú...";
-
 			break;
 		case 3:
 			Console::Clear();
 			ventana_creadores(2, 2);
 			cursor(2, 8); cout << "Presione Enter para volver al menú...";
-
 			break;
 		default:
 			cursor(x, y + 17); cout << "Opción no válida. Intente de nuevo.";
@@ -713,6 +743,24 @@ struct Basura {
 	int contador = 0;
 };
 
+struct vidas {
+	int x;
+	int y;
+	bool paloDetectado = false;
+	bool existe = true;
+	int tick = 0;
+	int contador = 0;
+};
+
+struct reloj {
+	int x;
+	int y;
+	bool paloDetectado = false;
+	bool existe = true;
+	int tick = 0;
+	int contador = 0;
+};
+
 void dibujar_basura(Basura b) {
 
 	if (b.tipo == 1) {
@@ -729,7 +777,7 @@ void dibujar_basura(Basura b) {
 		cursor(b.x, b.y+2); cout << "@@@@@";
 	}
 	else if (b.tipo == 4) {
-		cursor(b.x, b.y); cout << "888";
+		cursor(b.x, b.y + 0); cout << "8888";
 	}
 }
 
@@ -753,6 +801,21 @@ void borrar_basura(Basura b) {
 	}
 }
 
+void dibujar_vidas(vidas v) {
+	cursor(v.x, v.y); cout << "[+]";
+}
+
+void borrar_vidas(vidas v) {
+	cursor(v.x, v.y); cout << "   ";
+}
+
+void dibujar_reloj(reloj r) {
+	cursor(r.x, r.y); cout << "[$]";
+}
+
+void borrar_reloj(reloj r) {
+	cursor(r.x, r.y); cout << "   ";
+}
 
 void jugar_nivel2() {
 	//Coordenadas del personaje
@@ -761,27 +824,64 @@ void jugar_nivel2() {
 
 	Console::Clear();
 	crear_mapa2();
-	_sleep(2000);
+	for (int i = 0; i < 550; ++i) { 
+		animar_peces(mapa2);
+		if (kbhit()) break; // Permite salir con una tecla
+	}
+	_sleep(5000);
 	int puntaje = 0;
 
 	int tick_basura = 1000;
 
 	// Crear basuras
+	//Nota: Para crear basuras eficazmente hay que jugar con estos 6 valores para que los peces puedan bloquear bien la basura
 	Basura basuras[] = {
-		{20, 8, false, true, 10, 1,0}, // Basura 1 de tipo 1
-		{20, 30, false, true, 10, 2,0}, // Basura 2 de tipo 2
-		{30, 15, false, true, 10, 3,0}, // Basura 3 de tipo 3
-		{40, 20, false, true, 10, 4,0}  // Basura 4 de tipo 4
+		{10, 16, false, true, 10, 1,0}, // Basura 1 de tipo 1
+		{20, 20, false, true, 10, 2,0}, // Basura 2 de tipo 2
+		{30, 24, false, true, 10, 3,0}, // Basura 3 de tipo 3
+		{40, 28, false, true, 10, 4,0},  // Basura 4 de tipo 4
+		{50, 32, false, true, 10, 2,0 }, // Basura 5 de tipo 2
+		{60, 36, false, true, 10, 4,0 }, // Basura 6 de tipo 4
 	};
-	// Dibujar todas las basuras
+	//
+	vidas vidas[] = {
+		{10, 10, false, true, 10,0}, // Vida 1
+		{18, 12, false, true, 10,0}, // Vida 2
+		{35, 14, false, true, 10,0}, // Vida 3
+	};
+	//
+	reloj relojes[] = {
+		{10, 20, false, true, 10,0}, // Reloj 1
+		{25, 22, false, true, 10,0}, // Reloj 2
+		{27, 24, false, true, 10,0}, // Reloj 3
 
-	for (int i = 0; i < 4; i++) {
+	};
+
+	// Dibujar todas las basuras
+	for (int i = 0; i < 6; i++) {
+		Console::ForegroundColor = ConsoleColor::Black;
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
 		dibujar_basura(basuras[i]);
 	}
+	// Dibujar todas las vidas
+	for (int i= 0; i < 3; i++) {
+		Console::ForegroundColor = ConsoleColor::Black;
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		dibujar_vidas(vidas[i]);
+	}
+	// Dibujar todos los relojes
+	for (int i = 0; i < 3; i++) {
+		Console::ForegroundColor = ConsoleColor::Black;
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		dibujar_reloj(relojes[i]);
+	}
+	Console::ForegroundColor = ConsoleColor::White;
+	Console::BackgroundColor = ConsoleColor::Black;
+	cursor(10, 40); cout << "Puntaje: " << puntaje;
 
 	while (true) {
 		//PARA CADA BASURA
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 6; i++) {
 			basuras[i].tick++;
 			//SE AUMENTA EL TICK PARA COMPROBAR SI SE PUEDE DETECTAR UN PALO
 			if (basuras[i].tick >= tick_basura && basuras[i].paloDetectado == false && basuras[i].existe == true) {
@@ -791,7 +891,11 @@ void jugar_nivel2() {
 					//SI HAY UN PALO, SE DESACTIVA ESA BASURA
 					puntaje = puntaje + 1;
 					basuras[i].paloDetectado == true; // Desactiva futuras ejecuciones PONIENDO L BOOLEANO EN TRUE PORQUE YA SE DETECTÓ UN PALO
-					cursor(10, 1); cout << "Puntaje: " << puntaje;
+					Console::ForegroundColor = ConsoleColor::White;
+					Console::BackgroundColor = ConsoleColor::Black;
+					cursor(10, 40); cout << "Puntaje: " << puntaje;
+					Console::ForegroundColor = ConsoleColor::Black;
+					Console::BackgroundColor = ConsoleColor::DarkCyan;
 					basuras[i].existe = false; // Desactiva la basura
 					borrar_basura(basuras[i]); // Borra la basura de la pantalla
 				}
@@ -803,16 +907,13 @@ void jugar_nivel2() {
 				char tecla = getch();
 				if (tecla == DERECHA && xp != 135) { xp++; }
 				if (tecla == IZQUIERDA && xp != 1) { xp--; }
-				if (tecla == ABAJO && max < 32) { max++; }
+				if (tecla == ABAJO && max < 29) { max++; }
 				if (tecla == ARRIBA && max > 1) { max--; }
-
-				char basura_en_palo = obtenerCaracterEnPosicion(xp + 6, yp + 5 + max - 1);
-
 				dibuja_personaje(xp, yp);
 				dibuja_palo(xp + 6, yp + 5, max);
 				_sleep(1);
 			}
-		if (puntaje == 4) {
+		if (puntaje == 6) {
 				_sleep(3000);
 				break;
 			}
@@ -823,3 +924,86 @@ void jugar_nivel2() {
 	_sleep(4000);
 }
 //HOLA
+void jugar_nivel3() {
+	//Coordenadas del personaje
+	int xp = 35, yp = 6;
+	int max = 1; //maximo de palos que se pueden dibujar
+
+	Console::Clear();
+	crear_mapa3();
+	for (int i = 0; i < 550; ++i) { // Ajusta el número de iteraciones según el tiempo que quieras mostrar la animación
+		animar_peces(mapa3);
+		if (kbhit()) break; // Permite salir con una tecla
+	}
+	_sleep(5000);
+	int puntaje = 0;
+
+	int tick_basura = 1000;
+
+	// Crear basuras
+	//Nota: Para crear basuras eficazmente hay que jugar con estos 6 valores para que los peces puedan bloquear bien la basura
+	Basura basuras[] = {
+		{10, 16, false, true, 10, 1,0}, // Basura 1 de tipo 1
+		{20, 20, false, true, 10, 2,0}, // Basura 2 de tipo 2
+		{30, 24, false, true, 10, 3,0}, // Basura 3 de tipo 3
+		{40, 28, false, true, 10, 4,0},  // Basura 4 de tipo 4
+		{50, 32, false, true, 10, 2,0 }, // Basura 5 de tipo 2
+		{60, 36, false, true, 10, 4,0 }, // Basura 6 de tipo 4
+	};
+	// Dibujar todas las basuras
+	//El número de basuras puede variar, pero en este caso son 6
+	for (int i = 0; i < 6; i++) {
+		Console::ForegroundColor = ConsoleColor::Black;
+		Console::BackgroundColor = ConsoleColor::DarkCyan;
+		dibujar_basura(basuras[i]);
+	}
+
+	Console::ForegroundColor = ConsoleColor::White;
+	Console::BackgroundColor = ConsoleColor::Black;
+	cursor(10, 40); cout << "Puntaje: " << puntaje;
+
+	while (true) {
+		//PARA CADA BASURA
+		for (int i = 0; i < 6; i++) {
+			basuras[i].tick++;
+			//SE AUMENTA EL TICK PARA COMPROBAR SI SE PUEDE DETECTAR UN PALO
+			if (basuras[i].tick >= tick_basura && basuras[i].paloDetectado == false && basuras[i].existe == true) {
+				//SI EL TICK ES MAYOR O IGUAL AL TICK DE BASURA, SE COMPRUEBA SI HAY UN PALO
+				char hay_palo = obtenerCaracterEnPosicion(basuras[i].x, basuras[i].y);
+				if (hay_palo == '|' || hay_palo == 'J') {
+					//SI HAY UN PALO, SE DESACTIVA ESA BASURA
+					puntaje = puntaje + 1;
+					basuras[i].paloDetectado == true; // Desactiva futuras ejecuciones PONIENDO L BOOLEANO EN TRUE PORQUE YA SE DETECTÓ UN PALO
+					Console::ForegroundColor = ConsoleColor::White;
+					Console::BackgroundColor = ConsoleColor::Black;
+					cursor(10, 40); cout << "Puntaje: " << puntaje;
+					Console::ForegroundColor = ConsoleColor::Black;
+					Console::BackgroundColor = ConsoleColor::DarkCyan;
+					basuras[i].existe = false; // Desactiva la basura
+					borrar_basura(basuras[i]); // Borra la basura de la pantalla
+				}
+			}
+		}
+
+		if (kbhit()) {
+			borra_personaje(xp, yp);
+			borra_palo(xp + 6, yp + 5, max);
+			char tecla = getch();
+			if (tecla == DERECHA && xp != 135) { xp++; }
+			if (tecla == IZQUIERDA && xp != 1) { xp--; }
+			if (tecla == ABAJO && max < 29) { max++; }
+			if (tecla == ARRIBA && max > 1) { max--; }
+			dibuja_personaje(xp, yp);
+			dibuja_palo(xp + 6, yp + 5, max);
+			_sleep(1);
+		}
+		if (puntaje == 6) {
+			_sleep(3000);
+			break;
+		}
+	}
+	// Mostrar mensaje de victoria
+	Console::Clear();
+	ventana_youwin(20, 3);
+	_sleep(4000);
+}
